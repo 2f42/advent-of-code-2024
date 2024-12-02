@@ -2,42 +2,25 @@
   (:require
    [clojure.string]))
 
-(defn read-reports
-  []
+(defn read-reports []
   (->> (slurp "inputs/day2.txt") ; slurp 😋
        (clojure.string/split-lines)
        (mapv #(mapv Integer/parseInt (re-seq #"\d+" %))))) ; split each line into list of ints
 
-(defn safe?
-  [levels]
-  (and
-   (or (apply < levels) (apply > levels)) ; monotonically increasing or decreasing
-   (->> levels
-        (partition 2 1) ; pairs
-        (map #(apply (comp abs -) %)) ; absolute difference
-        (apply max)
-        (>= 3))))
+(defn safe? [levels]
+  (and (or (apply < levels) (apply > levels)) ; monotonically increasing or decreasing
+       (->> (partition 2 1 levels) ; pairs
+            (map #(apply (comp abs -) %)) ; absolute difference
+            (apply max)
+            (>= 3)))) ; biggest difference is at most 3
 
-(defn safe-with-damping?
-  [levels]
+(defn safe-with-damping? [levels]
   (or (safe? levels) ; safe anyway?
       (some true? (for [i (range (count levels))] ; remove ith level, is it safe?
-                    (safe? (concat (take i levels) (nthrest levels (inc i))))))))
+                    (safe? (concat (take i levels) (drop (inc i) levels)))))))
 
 ;; part 1
-(reduce (fn [total levels]
-          (if (safe? levels)
-            (do (println levels)
-                (inc total))
-            total))
-        0
-        (read-reports))
+(count (filter safe? (read-reports)))
 
 ; part 2
-(reduce (fn [total levels]
-          (if (safe-with-damping? levels)
-            (do (println levels)
-                (inc total))
-            total))
-        0
-        (read-reports))
+(count (filter safe-with-damping? (read-reports)))
