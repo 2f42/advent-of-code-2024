@@ -1,0 +1,38 @@
+node_modules/
+
+/target
+/checkouts
+/src/gen
+.cpcache/
+/build
+
+pom.xml
+pom.xml.asc
+*.iml
+*.jar
+*.log
+.shadow-cljs
+.idea
+.lein-*
+.nrepl-*
+.DS_Store
+
+.calva/output-window
+.calva/repl.calva-repl
+.lsp/.cache
+.clj-kondo/.cache
+
+# vs code
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
