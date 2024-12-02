@@ -36,3 +36,7 @@ pom.xml.asc
 
 # Built Visual Studio Code Extensions
 *.vsix
+
+
+inputs/*
+!inputs/inputs_here.txt
