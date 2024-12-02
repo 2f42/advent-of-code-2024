@@ -2,15 +2,13 @@
   (:require
    [clojure.string]))
 
-(defn get-two-lists
-  []
+(defn get-two-lists []
   (->> (slurp "inputs/day1.txt") ; slurp 😋
        (clojure.string/split-lines)
        (mapv #(mapv Integer/parseInt (re-seq #"\d+" %))) ; split each line into [int int]
        (apply mapv list))) ; transpose
 
-(defn count-occurrences
-  [xs]
+(defn count-occurrences [xs]
   (reduce (fn [counts x]
             (update counts x (fnil inc 0)))
           {} ; counts
