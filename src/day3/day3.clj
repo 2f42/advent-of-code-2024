@@ -12,9 +12,9 @@
      (re-seq #"(mul\(\d+,\d+\)|do(n't)?\(\))") ; extract all valid instructions
      (map first) ; only take full matching group
      (reduce (fn [[acc on?] instr]
-               (cond
-                 (re-matches #"mul\(\d+,\d+\)" instr) [(+ acc (apply * on? (mapv Integer/parseInt (re-seq #"\d+" instr)))) on?] ; extract ints, multiply
-                 (re-matches #"do\(\)" instr) [acc 1] ; if do, then on
-                 :else [acc 0])) ; if don't, then off
+               (case instr
+                 "do()" [acc 1] ; if do, then on
+                 "don't()" [acc 0] ; if don't, then off
+                 [(+ acc (apply * on? (mapv Integer/parseInt (re-seq #"\d+" instr)))) on?])) ; else, extract ints, multiply
              [0 1])
      (first)) ; ignore "on"
