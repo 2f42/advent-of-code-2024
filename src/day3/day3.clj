@@ -9,7 +9,7 @@
 
 ;; part 2
 (->> (slurp "inputs/day3.txt") ; slurp 😋
-     (re-seq #"(mul\(\d+,\d+\)|do(n't)?\(\))") ; extract all valid instructions
+     (re-seq #"mul\(\d+,\d+\)|do(n't)?\(\)") ; extract all valid instructions
      (map first) ; only take full matching group
      (reduce (fn [[acc on?] instr]
                (case instr
