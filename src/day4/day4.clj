@@ -6,15 +6,10 @@
   (->> (slurp "inputs/day4.txt") ; slurp 😋
        (clojure.string/split-lines)))
 
-(defn rotate-board
-  ([board]
-   (->> board
-        (reverse) ; flip vertically
-        (apply map str))) ; transpose
-  ([board times]
-   (case times
-     0 board
-     (rotate-board (rotate-board board) (dec times)))))
+(defn rotate-board [board]
+  (->> board
+       (reverse) ; flip vertically
+       (apply map str))) ; transpose
 
 (defn not-in-right-n-columns? [index size n]
   (>= size (+ (mod index size) (inc n))))
@@ -45,16 +40,12 @@
          (count))))
 
 ;; part 1
-(let [board (read-board)]
-  (->> (for [i (range 4)]
-         (rotate-board board i))
-       (map #(+ (horizontal-matches %) (diagonal-matches %)))
-       (reduce +)))
+(->> (take 4 (iterate rotate-board (read-board)))
+     (map #(+ (horizontal-matches %) (diagonal-matches %)))
+     (reduce +))
 
 ;; part 2
-(let [board (read-board)]
-  (->> (for [i (range 4)]
-         (rotate-board board i))
-       (map x-mas-matches)
-       (reduce +)))
+(->> (take 4 (iterate rotate-board (read-board)))
+     (map x-mas-matches)
+     (reduce +))
 
