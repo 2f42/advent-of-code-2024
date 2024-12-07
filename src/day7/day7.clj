@@ -2,14 +2,10 @@
   (:require
    [clojure.string]))
 
-(defn operation-tree [fs xs]
-  (reduce (fn [coll f]
-            (into coll (map f xs)))
-          [] fs))
-
 (defn possible-answers [vals]
   (reduce (fn [xs x]
-            (operation-tree [(partial * x) (partial + x)] xs))
+            (into (map (partial * x) xs)
+                  (map (partial + x) xs)))
           [(first vals)] (rest vals)))
 
 (defn possible-answers-2 [vals]
