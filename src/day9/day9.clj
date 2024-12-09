@@ -5,12 +5,8 @@
        (re-seq #"\d")
        (map Integer/parseInt)
        (partition 2 2 [0])
-       (reduce (fn [{:keys [t id]} [size free]]
-                 {:t (conj! t {:size size :free free :id id})
-                  :id (inc id)})
-               {:t (transient []) :id 0})
-       (:t)
-       (persistent!)))
+       (map-indexed (fn [id [size free]]
+                      {:id id :size size :free free}))))
 
 (defn filesystem->list [filesystem]
   (->> filesystem
@@ -18,8 +14,8 @@
                  (conj! (conj! t (take size (cycle [id])))
                         (take free (cycle [nil]))))
                (transient []))
-       (persistent!)
-       (flatten)))
+       persistent!
+       flatten))
 
 (defn checksum [filesystem]
   (:acc (reduce (fn [{:keys [acc i]} x]
@@ -40,8 +36,8 @@
                          {:result (conj! result id)
                           :files files})))
                  {:result (transient []) :files (remove nil? file-list)})
-         (:result)
-         (persistent!))))
+         :result
+         persistent!)))
 
 ;; part 2
 (defn fit [files file]
@@ -76,6 +72,6 @@
   (reduce fit-id filesystem (reverse (range (count filesystem)))))
 
 (->> (read-filesystem)
-     (fit-last)
-     (filesystem->list)
-     (checksum))
+     fit-last
+     filesystem->list
+     checksum)
